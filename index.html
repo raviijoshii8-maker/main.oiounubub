@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burble · recipes from the heart</title>
+  <!-- completely different design: rustic, handmade, recipe‑blog feel -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #f7efe2;  /* old paper */
+      background-image: radial-gradient(circle at 20% 30%, rgba(255,235,200,0.3) 0%, transparent 30%),
+                        linear-gradient(145deg, #f3e5d5 0%, #faf1e3 100%);
+      font-family: 'Georgia', 'Times New Roman', serif;
+      color: #3e2e1f;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* header with hand‑drawn style */
+    header {
+      background: #6b4f3a;  /* rich coffee brown */
+      padding: 3rem 2rem 4rem;
+      text-align: center;
+      border-bottom: 8px dotted #e7b28e;
+      position: relative;
+      margin-bottom: 1rem;
+      box-shadow: inset 0 -10px 20px rgba(0,0,0,0.1);
+    }
+    header::after {
+      content: "🍴🍲🥄";
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #f7d9b3;
+      padding: 0.5rem 2rem;
+      border-radius: 60px;
+      font-size: 2rem;
+      letter-spacing: 10px;
+      border: 2px solid #9b6e4b;
+      color: #4d2e18;
+    }
+
+    header h1 {
+      font-size: 4rem;
+      font-weight: normal;
+      font-family: 'Brush Script MT', cursive, serif;
+      color: #fae7cb;
+      text-shadow: 4px 4px 0 #8b5e3c, 6px 6px 0 rgba(0,0,0,0.1);
+      margin-bottom: 0.3rem;
+      letter-spacing: 2px;
+    }
+
+    header p {
+      font-size: 1.4rem;
+      color: #f4dbb1;
+      font-style: italic;
+      background: rgba(0,0,0,0.1);
+      display: inline-block;
+      padding: 0.5rem 2rem;
+      border-radius: 50px;
+      backdrop-filter: blur(2px);
+    }
+
+    /* main container: torn paper effect */
+    .container {
+      max-width: 1100px;
+      margin: 1.5rem auto 3rem;
+      background: #fffcf4;
+      padding: 3rem 3rem;
+      box-shadow: 0 20px 35px rgba(80, 40, 10, 0.3), 0 0 0 2px #e1c6a8, 0 0 0 5px #fae5cd;
+      border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;  /* quirky hand‑drawn border */
+      position: relative;
+    }
+
+    /* hand‑drawn heading style */
+    h2 {
+      font-family: 'Trebuchet MS', 'Comic Sans', cursive; /* playful but readable */
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: #7b4f2b;
+      border-bottom: 3px dashed #dba87a;
+      padding-bottom: 0.5rem;
+      margin: 2.5rem 0 1.5rem;
+      display: inline-block;
+      transform: rotate(-0.5deg);
+    }
+
+    .section {
+      margin: 2.8rem 0;
+    }
+
+    /* recipe card grid – like index cards */
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.8rem;
+      margin: 2rem 0;
+    }
+
+    .recipe-card {
+      background: #fffbf2;
+      border: 2px solid #e5c6a3;
+      padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+      border-radius: 30px 10px 30px 10px;
+      box-shadow: 8px 8px 0 #b48b65;
+      transition: 0.15s linear;
+      font-family: 'Georgia', serif;
+      position: relative;
+    }
+    .recipe-card:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 12px 12px 0 #9d6e4b;
+      background-color: #fffdf9;
+    }
+
+    .recipe-card strong {
+      display: block;
+      font-size: 1.5rem;
+      color: #8f4f28;
+      border-left: 6px solid #e7a56e;
+      padding-left: 12px;
+      margin-bottom: 0.75rem;
+      font-family: 'Trebuchet MS', sans-serif;
+    }
+
+    .recipe-card p {
+      font-size: 1rem;
+      color: #4f3a28;
+      margin: 0.5rem 0;
+    }
+
+    .recipe-card::before {
+      content: "📋";
+      font-size: 2rem;
+      position: absolute;
+      top: -10px;
+      right: -5px;
+      transform: rotate(10deg);
+      filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.2));
+    }
+
+    /* ingredients list – with wooden spoon bullets */
+    .ingredient-list {
+      list-style: none;
+      padding: 0;
+    }
+    .ingredient-list li {
+      padding: 0.35rem 0 0.35rem 2rem;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="%23c97c54"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>') left center no-repeat;
+      background-size: 18px;
+      border-bottom: 1px dotted #eaccb0;
+    }
+
+    /* story / intro paragraph – recipe‑blog style */
+    .intro-story {
+      background: #f6ecdd;
+      padding: 2rem 2.5rem;
+      border-radius: 80px 20px 80px 20px;
+      border: 2px solid #dbb58b;
+      font-size: 1.25rem;
+      box-shadow: inset 0 0 0 3px #fff6e6, 0 10px 15px -8px #967259;
+      margin: 2rem 0;
+    }
+
+    /* contact & about – with handwritten vibe */
+    .company, .contact {
+      background: #eadac5;
+      border: 3px double #ab7e5a;
+      padding: 2rem 2.5rem;
+      border-radius: 40px 0 40px 0;
+      box-shadow: 5px 5px 0 #826a50;
+      font-size: 1.1rem;
+    }
+
+    .company p, .contact p {
+      margin: 0.8rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .contact p:first-of-type::before { content: "☎️"; font-size: 1.6rem; }
+    .contact p:nth-of-type(2)::before { content: "✉️"; font-size: 1.6rem; }
+    .contact p:nth-of-type(3)::before { content: "🗣️"; font-size: 1.6rem; }
+
+    a {
+      color: #8f521b;
+      text-decoration: wavy underline #e5a36f 1.5px;
+      font-weight: 500;
+    }
+    a:hover {
+      color: #c45f1a;
+      text-decoration: underline wavy #f09d5b 2px;
+    }
+
+    footer {
+      background: #6b4f3a;
+      color: #ecdbba;
+      text-align: center;
+      padding: 2rem 1rem;
+      border-top: 8px dotted #bb8b66;
+      font-size: 1.1rem;
+      margin-top: 4rem;
+    }
+    .footer-info {
+      color: #cfb595;
+      margin-top: 0.5rem;
+    }
+
+    /* cookie modal – warm, recipe inspired */
+    #cookie-modal-box:not(.hidden) #cookie-modal > div {
+      background: #fff9ed;
+      border: 4px solid #cb9e73;
+      border-radius: 80px 20px 80px 20px;
+      box-shadow: 15px 15px 0 #744f31;
+    }
+    #cookie-modal-box.hidden { display: none; }
+    #cookie-backdrop { opacity: 0; transition: 0.3s; background: #28180e80; backdrop-filter: blur(3px); }
+    #cookie-modal { opacity: 0; transform: scale(0.9); transition: 0.3s; }
+    #cookie-modal-box:not(.hidden) #cookie-backdrop { opacity: 1; }
+    #cookie-modal-box:not(.hidden) #cookie-modal { opacity: 1; transform: scale(1); }
+
+    /* custom quirky list for address */
+    .hand-list {
+      list-style: none;
+    }
+    .hand-list li {
+      margin: 1rem 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="%23b4652a"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="white"/></svg>') left center no-repeat;
+      padding-left: 32px;
+      background-size: 22px;
+    }
+  </style>
+</head>
+<body style="overflow: hidden;">
+  <!-- tailwind only for a few utilities, but design is fully custom -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- COOKIE MODAL with rustic flavour, same mouse behaviour -->
+  <div id="cookie-modal-box" class="">
+    <div id="cookie-backdrop" class="fixed inset-0 z-40 transition-opacity duration-300"></div>
+    <div id="cookie-modal" class="fixed inset-0 flex items-center justify-center p-4 z-50 transition-all duration-300">
+        <div class="bg-[#fff7ea] text-stone-800 rounded-[70px_20px_70px_20px] shadow-2xl max-w-md w-full p-8 relative border-4 border-amber-800/50">
+            <button id="cookie-close" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-amber-100 border-2 border-amber-700 flex items-center justify-center hover:bg-amber-200">
+                <svg viewBox="0 0 15 15" class="text-amber-800" height="18" width="18">
+                    <path fill="currentColor" d="M11.78 4.03a.75.75 0 0 0-1.06-1.06L7.5 6.19 4.28 2.97a.75.75 0 1 0-1.06 1.06L6.44 7.5l-3.22 3.22a.75.75 0 1 0 1.06 1.06L7.5 8.56l3.22 3.22a.75.75 0 1 0 1.06-1.06L8.56 7.5l3.22-3.47Z"></path>
+                </svg>
+            </button>
+            <div class="flex items-center gap-4 mb-4">
+                <span class="text-5xl">🍪📖</span>
+                <h2 class="text-3xl font-serif font-bold text-amber-900">family recipe</h2>
+            </div>
+            <p class="text-stone-700 mb-6 text-lg">
+                We use a pinch of cookies to remember your favourite recipes. 
+                <span class="font-bold text-amber-800">“Accept”</span> and let’s cook!
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button id="cookie-accept" class="flex-1 bg-amber-800 hover:bg-amber-900 text-stone-100 py-3 px-6 rounded-[40px_10px_40px_10px] font-serif text-lg shadow-md border-2 border-amber-600">🍯 Accept</button>
+                <button id="cookie-decline" class="flex-1 bg-stone-300 hover:bg-stone-400 text-stone-800 py-3 px-6 rounded-[40px_10px_40px_10px] font-serif">No, thanks</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+        const modalBox = document.getElementById("cookie-modal-box");
+        const modal = document.getElementById("cookie-modal");
+        const backdrop = document.getElementById("cookie-backdrop");
+        const accept = document.getElementById("cookie-accept");
+        const decline = document.getElementById("cookie-decline");
+        const closeBtn = document.getElementById("cookie-close");
+
+        function showModal() {
+            modalBox.classList.remove("hidden");
+            setTimeout(() => {
+                backdrop.classList.remove("opacity-0");
+                modal.classList.remove("opacity-0", "scale-90");
+            }, 10);
+        }
+
+        function hideModal(choice) {
+            localStorage.setItem("burble-recipe-consent", choice);
+            modal.classList.add("opacity-0", "scale-90");
+            backdrop.classList.add("opacity-0");
+            setTimeout(() => {
+                modalBox.classList.add("hidden");
+                document.body.style.overflow = "";
+            }, 400);
+            document.removeEventListener("mousemove", mouseMoveHandler);
+        }
+
+        function mouseMoveHandler() {
+            hideModal("closed");
+        }
+
+        if (accept) accept.onclick = () => hideModal("accepted");
+        if (decline) decline.onclick = () => hideModal("declined");
+        if (closeBtn) closeBtn.onclick = () => hideModal("closed");
+        if (backdrop) backdrop.onclick = () => hideModal("closed");
+
+        if (!localStorage.getItem("burble-recipe-consent")) {
+            showModal();
+            document.addEventListener("mousemove", mouseMoveHandler, { once: true });
+        } else {
+            document.body.style.overflow = "";
+        }
+    })();
+  </script>
+
+  <header>
+    <h1>Burble</h1>
+    <p>heirloom recipes · modern kitchen</p>
+  </header>
+
+  <div class="container">
+    <section class="section">
+      <h2>our story</h2>
+      <div class="intro-story">
+        <p>✨ Burble started in a tiny Minsk kitchen, mixing grandmom’s notebooks with farmers’ market finds. Now we share recipes that feel like a warm hug – from borscht to babka, always with a twist.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>🥕 this month's favourites</h2>
+      <div class="recipe-grid">
+        <div class="recipe-card"><strong>Honey & rye bread</strong><p>dark rye, local honey, caraway – 3h rise</p></div>
+        <div class="recipe-card"><strong>Grandma’s borscht</strong><p>beetroot, dill, secret pinch of love</p></div>
+        <div class="recipe-card"><strong>Potato draniki</strong><p>crispy outside, soft inside – with sour cream</p></div>
+        <div class="recipe-card"><strong>Apple & cinnamon babka</strong><p>sweet dough, autumn apples, streusel</p></div>
+        <div class="recipe-card"><strong>Mushroom & barley soup</strong><p>forest mushrooms, pearl barley, thyme</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>🥣 popular categories</h2>
+      <div class="recipe-grid">
+        <div class="recipe-card"><strong>soups & stews</strong><p>15 recipes</p></div>
+        <div class="recipe-card"><strong>breads & pastries</strong><p>12 recipes</p></div>
+        <div class="recipe-card"><strong>vegetarian mains</strong><p>20 recipes</p></div>
+        <div class="recipe-card"><strong>ferments & pickles</strong><p>8 recipes</p></div>
+        <div class="recipe-card"><strong>desserts</strong><p>18 recipes</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>from the kitchen</h2>
+      <ul class="ingredient-list">
+        <li><strong>new:</strong> beetroot kvass (probiotic & earthy)</li>
+        <li><strong>video:</strong> how to shape rye sourdough</li>
+        <li><strong>seasonal:</strong> wild mushroom foraging guide</li>
+        <li><strong>podcast:</strong> Belarusian food heritage</li>
+      </ul>
+    </section>
+
+    <section class="company section">
+      <h2>about the hearth</h2>
+      <ul class="hand-list">
+        <li><strong>Burble Kitchen</strong> — since 2017, food community & cooking school</li>
+        <li>📍 220030 Minsk, Zybitskaya 6, courtyard</li>
+        <li>📋 UNP 193456122, account BY12ALFA30122667780040110000</li>
+        <li>🏦 Alfa‑Bank, BIC ALFABY2X</li>
+        <li>👩‍🍳 founder: Vera Ivanovna Kozlovskaya</li>
+      </ul>
+    </section>
+
+    <section class="contact section">
+      <h2>let's chat</h2>
+      <p>📞 +375 (29) 456-78-99</p>
+      <p>📧 <a href="mailto:hello@burble.by"><span class="__cf_email__" data-cfemail="8ee7e0e8e1cefdfff8fbeaa0e6fb">hello@burble.by</span></a></p>
+      <p>🗣️ Instagram @burble.kitchen</p>
+      <p style="margin-top:1rem"><i>— every recipe has a story —</i></p>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2017–2025 Burble.by · share the table</p>
+    <p class="footer-info">cooked with 🧂 by Burble studio</p>
+  </footer>
+
+  <!-- cf email decoder (kept for functionality) -->
+  <script>
+    (function(){
+        function decodeEmail(encodedString) {
+            var email = "", r = parseInt(encodedString.substr(0, 2), 16), n, i;
+            for (n = 2; encodedString.length - n; n += 2){
+                i = parseInt(encodedString.substr(n, 2), 16) ^ r;
+                email += String.fromCharCode(i);
+            }
+            return email;
+        }
+        var elements = document.querySelectorAll('.__cf_email__');
+        for (var i = 0; i < elements.length; i++) {
+            var el = elements[i];
+            var encoded = el.getAttribute('data-cfemail');
+            if (encoded) {
+                var decodedEmail = decodeEmail(encoded);
+                el.innerHTML = decodedEmail;
+                if (el.parentNode.tagName === 'A') {
+                    el.parentNode.href = "mailto:" + decodedEmail;
+                }
+            }
+        }
+    })();
+  </script>
+
+  <script>
+    (function() {
+        if (localStorage.getItem("burble-recipe-consent")) {
+            document.body.style.overflow = "";
+        } else {
+            document.body.style.overflow = "hidden";
+        }
+    })();
+  </script>
+</body>
+</html>
